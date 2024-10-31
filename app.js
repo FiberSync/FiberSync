@@ -120,6 +120,9 @@ app.use(function(err, req, res, next) {
   });
 });
 
+  app.get('/test', function(req, res){
+    res.status(200).json({message: "Hello World"});
+}); 
 
 
 // app listen function

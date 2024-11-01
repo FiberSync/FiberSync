@@ -8,6 +8,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const connectDB = require('./functions/connectdb.js');
 const nodemailer = require('nodemailer');
+const SubscriberModel = require("./models/subscribers");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -95,6 +96,8 @@ app.get('/sendIntroEmail', function(req, res) {
     </div>
   `
   };
+
+  
   
   // Send email
   transporter.sendMail(mailOptions, (error, info) => {
@@ -105,6 +108,25 @@ app.get('/sendIntroEmail', function(req, res) {
     res.status(200).json({ message: "Email is sent successfully" });;
   });
 })
+
+app.get('/get-plan', async (req, res) => {
+  const email = req.query.email; // Assuming req.email is already populated
+
+  try {
+    // Find the subscriber by email
+    const subscriber = await SubscriberModel.findOne({ email });
+
+    if (!subscriber) {
+      return res.status(200).json({ plan: 'Not Subscribed' });
+    }
+
+    // Send the plan attribute
+    res.json({ plan: subscriber.plan });
+  } catch (error) {
+    console.error("Error fetching subscriber's plan:", error);
+    res.status(500).json({ message: 'An error occurred while fetching the plan' });
+  }
+});
 
 
 //error-handler
@@ -120,9 +142,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-  app.get('/test', function(req, res){
-    res.status(200).json({message: "Hello World"});
-}); 
+
 
 
 // app listen function

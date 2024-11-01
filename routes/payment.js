@@ -2,13 +2,28 @@ const express = require('express');
 const router = express.Router();
 require("dotenv").config();
 const stripe = require("stripe")(process.env.Private_Api_Key);
+const jwt = require("jsonwebtoken");
+const SubscriberModel = require("../models/subscribers");
 
-const DOMAIN = process.env.CLIENT_URL || "http://localhost:5173/index";
+const DOMAIN = process.env.CLIENT_URL || "http://localhost:5173";
 
 router.post("/paymentSubscription", async (req, res) => {
-  const { plan } = req.body;
+  const { plan,token } = req.body;
+  let email,orgName;
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+    email = decoded.email; 
+    orgName = decoded.orgName;
+  } catch (error) {
+    console.error("Token verific ation failed:", error);
+    return null;
+  }
+
+  const subscriber = await SubscriberModel.findOne({ email });
+
   let price_id;
-  if(plan=="starter"){
+  if(plan=="Starter Subscription"){
     price_id = "price_1QFfyYBImh8kdtbe73KYWBtZ";
   }else{
      price_id = "price_1QFg7qBImh8kdtbeCCm9GOQV";
@@ -22,9 +37,17 @@ router.post("/paymentSubscription", async (req, res) => {
             },
           ],
       mode: 'subscription', 
-      success_url: `${DOMAIN}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${DOMAIN}?cancelled=payment-cancelled`,
+      success_url: `${DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${DOMAIN}/cancel?cancelled=payment-cancelled`,
     });
+    
+  if (!subscriber) {  
+    const newSubscriber = new SubscriberModel({ email,orgName,plan });
+    await newSubscriber.save();
+  }else{
+    subscriber.plan = plan;
+    await subscriber.save();
+  }
 
     res.json({ url: session.url }); 
   } catch (error) {

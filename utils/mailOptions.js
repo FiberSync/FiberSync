@@ -60,3 +60,27 @@ const purchaseMail = {
     `
   };
   
+
+
+  {(!hidden) && <nav className={`lg:flex items-center hidden lg:static`}>
+  <ul style={{fontWeight: 500}} className="flex flex-col lg:flex-row gap-y-4 lg:gap-x-6 text-white font-body text-base">
+    <li className="relative group dropdown">
+      <Link to="#" className="flex items-center gap-1 hover:text-colorGreen">Features</Link>
+      <ul  className="dropdown-content d absolute left-0 top-full hidden group-hover:block bg-white text-black shadow-lg mt-2 ">
+        <li><Link to="/index" className=" hover:text-colorGreen block px-4 py-2">Inventory Management</Link></li>
+        <li><Link to="/features_fa" className=" hover:text-colorGreen block px-4 py-2">Field Agent App</Link></li>
+        <li><Link to="/index-3" className=" hover:text-colorGreen block px-4 py-2">Adming Portal</Link></li>
+        <li><Link to="/index-4" className=" hover:text-colorGreen block px-4 py-2">Blockchain</Link></li>
+      </ul>
+    </li>
+    <li><Link to="/about" className="hover:text-colorGreen">About</Link></li>
+    <li className="relative group">
+      <Link to="#" className=" hover:text-colorGreen flex items-center gap-1">Services</Link>
+      <ul className="absolute left-0 top-full hidden group-hover:block bg-white text-black shadow-lg mt-2">
+        <li><Link to="/plans" className=" hover:text-colorGreen block px-4 py-2">Services</Link></li>
+        <li><Link to="/service-details" className=" hover:text-colorGreen block px-4 py-2">Service Details</Link></li>
+      </ul>
+    </li>
+    {/* Additional menu items as needed */}
+  </ul>
+</nav> }

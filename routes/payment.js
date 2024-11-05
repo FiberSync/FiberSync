@@ -5,7 +5,7 @@ const stripe = require("stripe")(process.env.Private_Api_Key);
 const jwt = require("jsonwebtoken");
 const SubscriberModel = require("../models/subscribers");
 
-const DOMAIN = process.env.CLIENT_URL || "http://localhost:5173";
+const DOMAIN = process.env.CLIENT_URL || "https://fibersync-portfolio.vercel.app";
 
 router.post("/paymentSubscription", async (req, res) => {
   const { plan,token } = req.body;

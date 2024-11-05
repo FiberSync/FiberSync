@@ -84,7 +84,7 @@ app.get('/sendIntroEmail', function(req, res) {
 
       <!-- Get Started Button -->
       <div style="text-align: center; margin-top: 30px;">
-        <a href="https://yourdomain.com/get-started" target="_blank" style="background-color: #39ff14; color: #191919; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-size: 18px; font-weight: bold; display: inline-block;">
+        <a href="https://fibersync-portfolio.vercel.app/plans" target="_blank" style="background-color: #39ff14; color: #191919; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-size: 18px; font-weight: bold; display: inline-block;">
           Choose Your Plan
         </a>
       </div>

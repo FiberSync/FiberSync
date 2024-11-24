@@ -196,6 +196,100 @@ app.get('/sendPurchaseEmail',authenticateToken, function(req, res) {
   });
 })
 
+app.post('/login', function(req, res) {
+  const { email, password } = req.body;
+  const validEmail = 'master0000';
+  const validPassword = 'admin0000';
+
+  // Validate the email and password
+  if (email === validEmail && password === validPassword) {
+    res.status(200).json({ message: 'Valid Credentials' });
+  } else {
+    res.status(401).json({ message: 'Invalid Credentials' });
+  }
+});
+
+app.post('/sendSupportEmail', function(req, res) {
+  let email = req.body.email;
+  let orgName = req.body.orgName;
+
+  // Support email content
+  const supportMail = {
+    from: 'fibersync.textile@gmail.com',
+    to: `${email}`,
+    subject: 'FiberSync Support: Setting Up MetaMask and Login Instructions',
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        
+        <!-- Logo -->
+        <div style="text-align: center; margin-bottom: 30px;">
+          <img src="https://i.ibb.co/fvdtMCx/fiber-Logo.png" alt="FiberSync Logo" style="max-width: 200px; height: auto;">
+        </div>
+
+        <!-- Support Message -->
+        <h1 style="text-align: center; color: #191919;">Hello ${orgName} Team,</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: #555;">
+          Thank you for reaching out to FiberSync support. We understand that you're experiencing issues with logging into your FiberSync account. Please follow the instructions below to get started with your MetaMask wallet and login to the platform.
+        </p>
+        
+        <!-- Step 1: Install MetaMask -->
+        <h2 style="color: #191919; font-size: 20px; margin-top: 20px;">Step 1: Install MetaMask</h2>
+        <p style="font-size: 16px; line-height: 1.6; color: #555;">
+          To interact with FiberSync’s blockchain-based platform, you need to have the MetaMask wallet installed. Please follow the steps below:
+        </p>
+        <ul style="font-size: 16px; line-height: 1.6; color: #555;">
+          <li>Download and install the MetaMask extension for your browser from <a href="https://metamask.io/download" target="_blank" style="color: #39ff14;">MetaMask.io</a>.</li>
+          <li>After installation, create a new wallet or import an existing one using your recovery phrase.</li>
+          <li>Make sure that your MetaMask wallet is set to the **Ethereum Mainnet**.</li>
+        </ul>
+
+        <!-- Step 2: Set Up FiberSync Wallet -->
+        <h2 style="color: #191919; font-size: 20px; margin-top: 20px;">Step 2: Set Up FiberSync Wallet</h2>
+        <p style="font-size: 16px; line-height: 1.6; color: #555;">
+          FiberSync has created a wallet for your organization to access our platform. Please follow the steps below to add the wallet:
+        </p>
+        <ul style="font-size: 16px; line-height: 1.6; color: #555;">
+          <li>Open MetaMask and click on the “Account” icon.</li>
+          <li>Select “Import Account” and enter the wallet address and seed phrase provided below:</li>
+          <li><strong>Wallet Address:</strong> 0x1234...abcd</li>
+          <li><strong>Seed Phrase:</strong> --------------xxx------------xxx------------</li>
+        </ul>
+
+        <!-- Step 3: Login -->
+        <h2 style="color: #191919; font-size: 20px; margin-top: 20px;">Step 3: Login to FiberSync</h2>
+        <p style="font-size: 16px; line-height: 1.6; color: #555;">
+          Once your MetaMask wallet is set up with the correct wallet address, you can use it to log in to your FiberSync account.
+        </p>
+        <ul style="font-size: 16px; line-height: 1.6; color: #555;">
+          <li>Go to the <a href="https://fibersync-portfolio.vercel.app" target="_blank" style="color: #39ff14;">FiberSync Dashboard</a>.</li>
+          <li>Click on the “Login with MetaMask” button.</li>
+          <li>MetaMask will ask you to sign a message to confirm your identity.</li>
+          <li>Once confirmed, you will be logged in to your FiberSync account.</li>
+        </ul>
+        
+        <!-- Security Reminder -->
+        <p style="font-size: 16px; line-height: 1.6; color: #ff0000;">
+          <strong>Important:</strong> For security reasons, never share your MetaMask wallet recovery phrase or private keys with anyone. FiberSync will never ask for this information.
+        </p>
+
+        <!-- Footer -->
+        <div style="margin-top: 40px; text-align: center; font-size: 14px; color: #777;">
+          <p>If you have any further questions, feel free to reach out to us at <a href="mailto:fibersync.textile@gmail.com" style="color: #39ff14;">fibersync.textile@gmail.com</a>.</p>
+          <p>We’re here to help!</p>
+        </div>
+      </div>
+    `
+  };
+
+  // Send email
+  transporter.sendMail(supportMail, (error, info) => {
+    if (error) {
+      return res.status(500).json({ message: "Error Sending Support Email", error: error.message });
+    }
+    res.status(200).json({ message: "Support Email Sent Successfully" });
+  });
+});
+
 
 app.get('/get-plan', async (req, res) => {
   const email = req.query.email; // Assuming req.email is already populated

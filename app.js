@@ -203,9 +203,9 @@ app.post('/login', function(req, res) {
 
   // Validate the email and password
   if (email === validEmail && password === validPassword) {
-    res.status(200).json({ message: 'Valid Credentials' });
+    res.status(200).json({ message: 'Valid' });
   } else {
-    res.status(401).json({ message: 'Invalid Credentials' });
+    res.status(401).json({ message: 'Invalid' });
   }
 });
 
